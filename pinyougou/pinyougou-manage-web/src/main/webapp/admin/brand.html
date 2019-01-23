@@ -13,64 +13,12 @@
     <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
 	<script src="../plugins/angularjs/angular.min.js"></script>
 	<script src="../plugins/angularjs/pagination.js"></script>
+	<script src="../js/base_pagination.js"></script>
+	<script src="../js/service/brandService.js"></script>
+	<script src="../js/controller/baseController.js"></script>
+	<script src="../js/controller/brandController.js"></script>
 	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
-	
-	<script type="text/javascript">
 
-		//模块
-		var app = angular.module("pinyougou",['pagination']);
-
-		//方法体
-		app.controller("brandController",function ($scope,$http) {
-			
-		    //查询所有列表数据并绑定到list对象
-			$scope.findAll = function () {
-				$http.get("../brand/findAll.do").success(function (response) {
-					$scope.list = response;
-                });
-
-                //初始化分页参数
-                $scope.paginationConf = {
-                    currentPage:1,//当前页号
-                    totalItems:10,//总记录数
-                    itemsPerPage:10,//页大小
-                    perPageOptions:[10, 20, 30, 40, 50],//可选择的每页大小
-                    onChange: function () {//当上述的参数发生变化了后触发
-                        $scope.reloadList();
-                    }
-                };
-				//加载表格数据
-                $scope.reloadList = function () {
-                    $scope.findPage($scope.paginationConf.currentPage,
-                        $scope.paginationConf.itemsPerPage);
-                };
-				//分页查询
-                $scope.findPage = function (page, rows) {
-                    $http.get("../brand/findPage.do?page=" + page + "&rows=" +
-                        rows).success(function (response) {
-                        //更新记录列表
-                        $scope.list = response.rows;
-                        //更新总记录数
-                        $scope.paginationConf.totalItems = response.total;
-                    }).error(function () {
-						alert("加载资源失败")
-                    });
-                };
-
-                //保存
-				$scope.save = function () {
-					$http.post("../brand/add.do",$scope.entity).success(function (response) {
-						if (response.success){
-						    //重新加载列表
-							$scope.reloadList();
-						}else {
-						    alert(response.message)
-						}
-                    });
-                }
-            };
-        });
-	</script>
 </head>
 <body ng-app="pinyougou" ng-controller="brandController" ng-init="findAll()" class="hold-transition skin-red sidebar-mini">
   <!-- .box-body -->
@@ -88,15 +36,15 @@
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={}"><i class="fa fa-file-o"></i> 新建</button>
-                                        <button type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>           
+                                        <button type="button" class="btn btn-default" title="删除" ng-click="delete()"><i class="fa fa-trash-o" ></i> 删除</button>
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="box-tools pull-right">
                                 <div class="has-feedback">
-							        品牌名称：<input> 品牌首字母：<input>  <button class="btn btn-default">查询</button>                                 
-                                </div>
+							        品牌名称：<input ng-model="searchEntity.name"> 品牌首字母：<input ng-model="searchEntity.firstChar">  <button class="btn btn-default" ng-click="reloadList()">查询</button>
+								</div>
                             </div>
                             <!--工具栏/-->
 
@@ -107,22 +55,21 @@
 			                          <tr>
 			                              <th class="" style="padding-right:0px">
 			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
-											  {{entity}}
 			                              </th> 
 										  <th class="sorting_asc">品牌ID</th>
-									      <th class="sorting" ng-model="entity.name">品牌名称</th>
-									      <th class="sorting" ng-model="entity.firstChar">品牌首字母</th>
+									      <th class="sorting" >品牌名称</th>
+									      <th class="sorting" >品牌首字母</th>
 					                      <th class="text-center">操作</th>
 			                          </tr>
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="entity in list">
-			                              <td><input  type="checkbox" ></td>			                              
+			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.id)"></td>
 				                          <td>{{entity.id}}</td>
 									      <td>{{entity.name}}</td>
 		                                  <td>{{entity.firstChar}}</td>
 		                                  <td class="text-center">                                           
-		                                 	  <button type="button" class="btn bg-olive btn-xs"  data-toggle="modal" data-target="#editModal"  >修改</button>
+		                                 	  <button type="button" ng-click="findOne(entity.id)" class="btn bg-olive btn-xs"  data-toggle="modal" data-target="#editModal"  >修改</button>
 		                                  </td>
 			                          </tr>
 			                      </tbody>
@@ -152,11 +99,11 @@
 			<table class="table table-bordered table-striped"  width="800px">
 		      	<tr>
 		      		<td>品牌名称</td>
-		      		<td><input  class="form-control" placeholder="品牌名称" >  </td>
+		      		<td><input  class="form-control" ng-model="entity.name" placeholder="品牌名称" >  </td>
 		      	</tr>		      	
 		      	<tr>
 		      		<td>首字母</td>
-		      		<td><input  class="form-control" placeholder="首字母">  </td>
+		      		<td><input  class="form-control" ng-model="entity.firstChar" placeholder="首字母">  </td>
 		      	</tr>		      	
 			 </table>				
 		</div>
