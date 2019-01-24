@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularJS测试</title>
+    <script src="js/angular.min.js"></script>
+    <script type="text/javascript">
+
+        var app = angular.module("app",[]);
+
+        app.controller("myController",function ($scope) {
+            $scope.list = [1,2,3,4,5];
+
+            $scope.persons = [
+                {"id":1,"name":"刘镇星","gender":"男"},
+                {"id":2,"name":"张家辉","gender":"男"},
+                {"id":3,"name":"李婷婷","gender":"女"}
+                ];
+        })
+    </script>
+</head>
+<body ng-app="app" ng-controller="myController">
+简单数值集合遍历:<br>
+<div ng-repeat="num in list">
+    {{num}}<br>
+</div>
+<br>
+
+自定义对象集合遍历：<br>
+<table>
+    <thead>
+    <tr>
+        <td>id</td>
+        <td>姓名</td>
+        <td>性别</td>
+    </tr>
+    </thead>
+    <tr ng-repeat="p in persons">
+        <td>{{p.id}}</td>
+        <td>{{p.name}}</td>
+        <td>{{p.gender}}</td>
+    </tr>
+</table>
+</body>
+</html>
