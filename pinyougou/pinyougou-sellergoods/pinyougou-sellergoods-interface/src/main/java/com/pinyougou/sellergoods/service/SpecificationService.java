@@ -10,4 +10,10 @@ public interface SpecificationService extends BaseService<TbSpecification> {
     PageResult search(Integer page, Integer rows, TbSpecification specification);
 
     void add(Specification specification);
+
+    Specification findOne(Long id);
+
+    void update(Specification specification);
+
+    void deleteSpecificationByIds(Long[] ids);
 }
