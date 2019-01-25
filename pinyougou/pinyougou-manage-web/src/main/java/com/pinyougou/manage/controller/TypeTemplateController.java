@@ -77,5 +77,4 @@ public class TypeTemplateController {
                                @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
         return typeTemplateService.search(page, rows, typeTemplate);
     }
-
 }
