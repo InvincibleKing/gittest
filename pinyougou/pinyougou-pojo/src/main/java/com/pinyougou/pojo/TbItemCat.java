@@ -5,6 +5,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.List;
 
 @Table(name="tb_item_cat")
 public class TbItemCat implements Serializable {
@@ -51,4 +52,6 @@ public class TbItemCat implements Serializable {
     public void setTypeId(Long typeId) {
         this.typeId = typeId;
     }
+
+
 }
